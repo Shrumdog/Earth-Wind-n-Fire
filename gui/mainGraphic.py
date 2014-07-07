@@ -7,20 +7,7 @@ import wx
 
 class mainGraphic(wx.Panel):
     
-    def __init__(self, parent):
+    def __init__(self, parent, bg_img = 'main.jpg'):
         wx.Panel.__init__(self, parent=parent)
-        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-        self.frame = parent
-        
-        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
-    
-    def OnEraseBackground(self, e):
-        dc = e.GetDC()
-        
-        if not dc:
-            dc = wx.ClientDC(self)
-            rect = self.GetUpdateRegion().GetBox()
-            dc.SetClippingRect()
-        dc.Clear()
-        bmp = wx.Bitmap("main.jpg")
-        dc.DrawBitmap(bmp, 0, 0)
+        bmp1 = wx.Image(bg_img, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        self.bitmap1 = wx.StaticBitmap(self, -1, bmp1, (0, 0))
