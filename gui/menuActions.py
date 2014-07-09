@@ -5,7 +5,7 @@ Created on Jun 30, 2014
 '''
 import wx
 import os
-import parsing.fromLabView as parseLV
+import parsing.frq as parseFRQ
     
 def openLV(frame):
     dirname=''
@@ -14,7 +14,5 @@ def openLV(frame):
         filename = dlg.GetFilename()
         dirname = dlg.GetDirectory()
         f = os.path.join(dirname, filename)
-        print dirname
-        print filename
     dlg.Destroy()
-    parseLV.LV(f)
+    return parseFRQ.frq(f).GetData()

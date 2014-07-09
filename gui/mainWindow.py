@@ -7,6 +7,7 @@ Created on Jun 27, 2014
 import wx
 import menuActions
 import mainGraphic
+import GraphWindow
 
 class primaryFrame(wx.Frame):
     
@@ -67,13 +68,14 @@ class primaryFrame(wx.Frame):
         
     def bindActions(self):
         self.Bind(wx.EVT_MENU, self.onExit, self.menuExit)
-        self.Bind(wx.EVT_MENU, menuActions.openLV(self), self.menuFromLV)
+        self.Bind(wx.EVT_MENU, self.openFRQ, self.menuFromLV)
         
     def onExit(self, e):
         self.Close()
         
-    def openLV(self, e):
-        menuActions.openLV(self)
+    def openFRQ(self, e):
+        self.xdata, self.ydata = menuActions.openLV(self)
+        GraphWindow.window(self,(self.xdata,self.ydata))
         
 app = wx.App(False)
 frame = primaryFrame(None, 'Earth Wind and Fire')
