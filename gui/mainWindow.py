@@ -26,7 +26,8 @@ class primaryFrame(wx.Frame):
         self.panel = mainGraphic.mainGraphic(self)
         
     def initPanels(self):
-        print 'implement initPanels'
+        self.sizer = wx.BoxSizer()
+        
         
     def initMenus(self):
         self.initFileMenu()

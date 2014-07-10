@@ -10,7 +10,8 @@ class frq():
     def __init__(self, f):        
         blah = np.fromfile(f, float, -1, "")
         blah = blah.byteswap()
-        self.x, self.y = self.split_data(blah)
+        self.y, self.x = self.split_data(blah)
+        self.x, self.detail = self.modify(self.x)
         
     def split_data(self, arr):
         x = []
@@ -24,5 +25,14 @@ class frq():
     
     def GetData(self):
         return self.x, self.y
+    
+    def GetDetail(self):
+        return self.detail
+    
+    def modify(self, arr):
+        modifier = arr[0]
+        for x in range(0, len(arr)):
+            arr[x] = arr[x] - modifier
+        return (arr, modifier)
     
 #frq('trialdata.frq')
