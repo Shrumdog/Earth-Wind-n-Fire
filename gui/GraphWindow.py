@@ -4,24 +4,16 @@ Created on Jul 8, 2014
 @author: Ian
 '''
 import wx
-import matplotlib.pyplot as plt
 import matplotlib as mpl
 import matplotlib.backends as backends
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 
 class window(wx.Frame):
     def __init__(self, parent, data):
-        wx.Frame.__init__(self, parent, title="Working Title", size=(1000,800))
+        wx.Frame.__init__(self, parent, title="Working Title", size=(1000,600))
         self.data = data
-        plt.plot(data[0], data[1])
-        yMin = round(min(data[1])) - 5
-        yMax = round(max(data[1])) + 5
-        xMax = round(max(data[0])) + 5
-        plt.axis([0, xMax, yMin, yMax])
-        plt.show()
-#         self.init_panel()
-#         self.init_menus()
-#         self.graph.update(data)
+        self.init_panel()
+        self.init_menus()
         self.Show()
     
     def init_panel(self):
@@ -43,7 +35,7 @@ class window(wx.Frame):
 
 class panel(wx.Panel):
     def __init__(self, parent, position):
-        wx.Panel.__init__(self, parent,pos=position, size=(800, 640))
+        wx.Panel.__init__(self, parent,pos=position, size=(800, 320))
         self.data=parent.GetData()
         self.init_mpl()
         

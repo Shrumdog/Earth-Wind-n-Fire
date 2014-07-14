@@ -7,7 +7,7 @@ Created on Jun 27, 2014
 import wx
 import menuActions
 import mainGraphic
-import GraphWindow
+import matplotlib.pyplot as plt
 
 class primaryFrame(wx.Frame):
     
@@ -26,13 +26,13 @@ class primaryFrame(wx.Frame):
         self.panel = mainGraphic.mainGraphic(self)
         
     def initPanels(self):
-        self.sizer = wx.BoxSizer()
-        
+        print 'implement initPanels'
         
     def initMenus(self):
         self.initFileMenu()
         self.initParseMenu()
         self.initDataMenu()
+        self.initAnalysisMenu()
         self.initMenuBar()
         self.bindActions()
         
@@ -55,28 +55,43 @@ class primaryFrame(wx.Frame):
 #         self.initAnalysisMenu()
 #         self.init
         self.dataMenu.AppendSubMenu(self.interMenu, "&Interpolate", " 'Fill in the gaps' of a data file")
-    
+        self.plotMenu = self.dataMenu.Append(wx.ID_ANY, "&Plot", " Plot Current Data Set")
+        
     def initInterMenu(self):
         self.interMenu = wx.Menu()
         self.menuConstant = self.interMenu.Append(wx.ID_ANY, "&Constant Value", "Interpolate")
+    
+    def initAnalysisMenu(self):
+        self.analysisMenu = wx.Menu()
+        self.menuSimple = self.analysisMenu.Append(wx.ID_ANY, "&Simple Analysis", "find Mean Median and Mode of current data set")
         
     def initMenuBar(self):
         self.menuBar = wx.MenuBar()
         self.menuBar.Append(self.fileMenu, "&File")
         self.menuBar.Append(self.parseMenu, "&Parse")
         self.menuBar.Append(self.dataMenu, "&Data")
+        self.menuBar.Append(self.analysisMenu, "&Analysis")
         self.SetMenuBar(self.menuBar)
         
     def bindActions(self):
         self.Bind(wx.EVT_MENU, self.onExit, self.menuExit)
         self.Bind(wx.EVT_MENU, self.openFRQ, self.menuFromLV)
+        self.Bind(wx.EVT_MENU, self.sAnal, self.menuSimple)
+        self.Bind(wx.EVT_MENU, self.plot, self.menuPlot)
         
     def onExit(self, e):
         self.Close()
         
     def openFRQ(self, e):
-        self.xdata, self.ydata = menuActions.openLV(self)
-        GraphWindow.window(self,(self.xdata,self.ydata))
+        self.original_data = menuActions.openLV(self)
+        self.current_data = self.original_data
+        self.plot(self.original_data)
+        
+    def sAnal(self, e):
+        menuActions.simpleAnalysis(self.current_data)
+        
+    def plot(self, e):
+        menuActions.plot(self.current_data)
         
 app = wx.App(False)
 frame = primaryFrame(None, 'Earth Wind and Fire')
