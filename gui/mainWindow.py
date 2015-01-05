@@ -55,7 +55,7 @@ class primaryFrame(wx.Frame):
 #         self.initAnalysisMenu()
 #         self.init
         self.dataMenu.AppendSubMenu(self.interMenu, "&Interpolate", " 'Fill in the gaps' of a data file")
-        self.plotMenu = self.dataMenu.Append(wx.ID_ANY, "&Plot", " Plot Current Data Set")
+        self.menuPlot = self.dataMenu.Append(wx.ID_ANY, "&Plot", " Plot Current Data Set")
         
     def initInterMenu(self):
         self.interMenu = wx.Menu()

@@ -8,47 +8,68 @@ import os
 import parsing.frq as parseFRQ
 import numpy as np
 import matplotlib.pyplot as plt
+import decimal
+import parsing
     
-def openLV(frame):
+def openLV():
+    app = wx.App(False)
     dirname=''
-    dlg = wx.FileDialog(frame, "Select data to parse in", dirname, "", "*.frq", wx.OPEN)
+    dlg = wx.FileDialog(None, "Select data to parse in", dirname, "", "*.frq", wx.OPEN)
     if dlg.ShowModal() == wx.ID_OK:
         filename = dlg.GetFilename()
+        print filename
         dirname = dlg.GetDirectory()
+        print dirname
         f = os.path.join(dirname, filename)
     dlg.Destroy()
-    return parseFRQ.frq(f).GetData()
+    data = parseFRQ.frq(f).GetData()
+    xdata = bucket(data[1])
+    return data[0], xdata
 
 def simpleAnalysis(data):
-    data = data[1]
-    mean = np.mean(data)
-    median = np.median(data)
+#     data = data[1]
+#     for b in range (0, 20):
+#     print "Bucket Size: " + str(b)
+    op_data = bucket(data) 
+    
+    mean = np.mean(op_data)
+    median = np.median(op_data)
     modes = dict()
-    for x in range(0, len(data)):
-        if(modes.has_key(data[x])):
-            print "Has key " + data[x]
-            this = modes.get(data[x])
-            print "Old value: " + this
+    for x in range(0, len(op_data)):
+        if(modes.has_key(op_data[x])):
+            this = modes.pop(op_data[x])
             this += 1
-            print "Updating to " + this
-            print "New value: " + modes.get(data[x])
+            modes.update({op_data[x]:this})
         else:
-            modes.update({data[x]:1})
-    iter = modes.iteritems()
-    op = iter.next()
-    curmax = 0
-    mode = 0
-    while(op != None):
-        if(op[1] > curmax):
-            curmax = op[1]
-            mode = op[0]
-        try:
-            op = iter.next()
-        except StopIteration:
-            break
+            modes.update({op_data[x]:1})
+        iter = modes.iteritems()
+        op = iter.next()
+        curmax = 0
+        mode = 0
+        hits = 0
+        while(True):
+            hits += op[1]
+            if(op[1] > curmax):
+                curmax = op[1]
+                mode = op[0]
+            try:
+                op = iter.next()
+            except StopIteration:
+                break
+    print "total hits: " + str(hits)
+    print "length of set: " + str(len(modes))
+    average_hits = float(hits)/len(modes)
     print "mean: " + str(mean)
     print "median: " + str(median)
     print "mode: " + str(mode)
+    print "max hits: " + str(curmax)
+    print "average hits: " + str(average_hits)
+    
+def bucket(data):
+    new = []
+    for x in data:
+        new.append(float("%.5f" % x))
+    return new
     
 def plot(data):
     plt.plot(data[0], data[1])
@@ -57,3 +78,8 @@ def plot(data):
     xMax = data[0][len(data[0]) - 1] + 5
     plt.axis([0, xMax, yMin, yMax])
     plt.show()
+    
+# name = os.path.join("C:\Users\Ian\Desktop\Folder Folder\EWF\DataSets", "2014-06-24-20-59-46.frq")
+# f = parsing.frq.frq(name)
+# data = f.GetData()
+# simpleAnalysis(data)
